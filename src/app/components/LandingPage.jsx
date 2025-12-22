@@ -65,11 +65,25 @@ export default function LandingPage() {
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
 
+  // Função para disparar conversão do Google Ads
+  const triggerConversion = () => {
+    if (typeof gtag !== "undefined") {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-17791443438/q-NqCPPHz9UbEO7Dz6NC'
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen text-white font-poppins relative">
 
       {/* Botão fixo do WhatsApp */}
-      <a href={whatsappLink} target="_blank" className="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-50 flex items-center gap-2">
+      <a 
+        href={whatsappLink} 
+        target="_blank" 
+        className="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-50 flex items-center gap-2"
+        onClick={triggerConversion}
+      >
         <FaWhatsapp /> Fale com um Profissional
       </a>
 
@@ -88,6 +102,7 @@ export default function LandingPage() {
             href={whatsappLink}
             target="_blank"
             className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
+            onClick={triggerConversion}
           >
             Fale com a Velox Solar
           </a>
@@ -125,7 +140,12 @@ export default function LandingPage() {
           })}
         </div>
         <div className="mt-12">
-          <a href={whatsappLink} target="_blank" className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse">
+          <a 
+            href={whatsappLink} 
+            target="_blank" 
+            className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
+            onClick={triggerConversion}
+          >
             Fale com a Velox Solar
           </a>
         </div>
@@ -158,6 +178,7 @@ export default function LandingPage() {
                   href={whatsappLink}
                   target="_blank"
                   className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
+                  onClick={triggerConversion}
                 >
                   Fale com a Velox Solar
                 </a>
@@ -257,7 +278,12 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="mt-10 text-center">
-          <a href={whatsappLink} target="_blank" className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse">
+          <a 
+            href={whatsappLink} 
+            target="_blank" 
+            className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
+            onClick={triggerConversion}
+          >
             Fale com a Velox Solar
           </a>
         </div>
