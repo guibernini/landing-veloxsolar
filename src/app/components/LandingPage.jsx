@@ -35,6 +35,24 @@ function AnimatedNumber({ value, suffix, duration, start }) {
 }
 
 export default function LandingPage() {
+
+  const whatsappLink = "https://wa.me/5511940306171";
+  const instagramLink = "https://www.instagram.com/veloxsolar.pompeiahome/";
+  const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
+
+  // Função que dispara conversão e redireciona
+  const handleWhatsappClick = () => {
+    if (typeof window !== "undefined" && typeof gtag !== "undefined") {
+      gtag("event", "conversion", {
+        send_to: "AW-17791443438/q-NqCPPHz9UbEO7Dz6NC",
+      });
+    }
+    window.location.href = whatsappLink;
+  };
+
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
+
   const stats = [
     { label: "Redução na Conta de Luz", value: 95, suffix: "%", duration: 2000, icon: "💡" },
     { label: "Anos de Garantia", value: 25, suffix: "+", duration: 2500, icon: "🛠️" },
@@ -58,36 +76,18 @@ export default function LandingPage() {
     { question: "10. Meu desconto é o mesmo todos os meses?", answer: "O desconto é calculado mensalmente de acordo com a produção da usina e consumo do cooperado, podendo variar ligeiramente." },
   ];
 
-  const whatsappLink = "https://wa.me/5511940306171";
-  const instagramLink = "https://www.instagram.com/veloxsolar.pompeiahome/";
-  const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
-
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
-
-  // Função para disparar conversão do Google Ads
-  const triggerConversion = () => {
-    if (typeof gtag !== "undefined") {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-17791443438/q-NqCPPHz9UbEO7Dz6NC'
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen text-white font-poppins relative">
 
       {/* Botão fixo do WhatsApp */}
-      <a 
-        href={whatsappLink} 
-        target="_blank" 
+      <button
+        onClick={handleWhatsappClick}
         className="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-50 flex items-center gap-2"
-        onClick={triggerConversion}
       >
         <FaWhatsapp /> Fale com um Profissional
-      </a>
+      </button>
 
-      {/* ================= HERO ================= */}
+      {/* HERO */}
       <section className="relative min-h-[80vh] flex items-center justify-center text-center">
         <Image src="/hero-solar.webp" alt="Energia Solar" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/40" />
@@ -98,18 +98,16 @@ export default function LandingPage() {
           <p className="text-xl text-gray-200 mb-10">
             Economia, sustentabilidade e retorno garantido.
           </p>
-          <a
-            href={whatsappLink}
-            target="_blank"
+          <button
+            onClick={handleWhatsappClick}
             className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
-            onClick={triggerConversion}
           >
             Fale com a Velox Solar
-          </a>
+          </button>
         </div>
       </section>
 
-      {/* ================= ENERGIA SOLAR PARA CADA NECESSIDADE ================= */}
+      {/* ENERGIA SOLAR PARA CADA NECESSIDADE */}
       <section className="py-20 bg-[#0B0D17] text-white text-center">
         <h2 className="text-4xl font-bold mb-12">Energia Solar para Cada Necessidade</h2>
         <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto px-6">
@@ -140,18 +138,16 @@ export default function LandingPage() {
           })}
         </div>
         <div className="mt-12">
-          <a 
-            href={whatsappLink} 
-            target="_blank" 
+          <button
+            onClick={handleWhatsappClick}
             className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
-            onClick={triggerConversion}
           >
             Fale com a Velox Solar
-          </a>
+          </button>
         </div>
       </section>
 
-      {/* ================= QUEM SOMOS ================= */}
+      {/* QUEM SOMOS */}
       <section className="py-20 bg-[#0D1B2A] text-white text-center">
         <h2 className="text-5xl font-bold mb-12">Quem Somos</h2>
         <div className="flex flex-col items-center gap-10 max-w-4xl mx-auto px-6">
@@ -174,21 +170,19 @@ export default function LandingPage() {
               <p><strong>Referência no mercado</strong> de energia solar, com reconhecimento por clientes e parceiros.</p>
               <p><strong>Confiança garantida</strong>, cada projeto é executado com cuidado, segurança e compromisso com resultados.</p>
               <div className="mt-6">
-                <a
-                  href={whatsappLink}
-                  target="_blank"
+                <button
+                  onClick={handleWhatsappClick}
                   className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
-                  onClick={triggerConversion}
                 >
                   Fale com a Velox Solar
-                </a>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ================= NÚMEROS ANIMADOS ================= */}
+      {/* NÚMEROS ANIMADOS */}
       <section ref={statsRef} className="py-20 bg-[#0B0D17] text-white text-center">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
           {stats.map((stat, i) => (
@@ -208,10 +202,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= FORMULÁRIO + POR QUE ESCOLHER ================= */}
+      {/* FORMULÁRIO + POR QUE ESCOLHER */}
       <section className="py-20 bg-[#0E111C] text-white">
         <div className="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-12">
-
           {/* Form */}
           <motion.div className="flex-1 bg-[#141826] p-8 rounded-2xl shadow-lg"
             initial={{opacity:0, x:-50}} animate={{opacity:1, x:0}} transition={{duration:0.6}}
@@ -229,7 +222,7 @@ export default function LandingPage() {
             </form>
           </motion.div>
 
-          {/* Por que escolher nossa empresa */}
+          {/* Por que escolher */}
           <motion.div className="flex-1 grid gap-6"
             initial={{opacity:0, x:50}} animate={{opacity:1, x:0}} transition={{duration:0.6}}
           >
@@ -250,7 +243,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= FAQ ================= */}
+      {/* FAQ */}
       <section className="py-20 bg-[#0E111C] text-white text-center">
         <h2 className="text-4xl font-bold mb-10">Perguntas Frequentes</h2>
         <div className="max-w-4xl mx-auto text-left space-y-4">
@@ -278,18 +271,16 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="mt-10 text-center">
-          <a 
-            href={whatsappLink} 
-            target="_blank" 
+          <button
+            onClick={handleWhatsappClick}
             className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
-            onClick={triggerConversion}
           >
             Fale com a Velox Solar
-          </a>
+          </button>
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
+      {/* FOOTER */}
       <footer className="py-8 text-center text-gray-400 flex flex-col items-center gap-3 bg-[#0B0D17]">
         <p>© 2025 Velox Solar. Todos os direitos reservados.</p>
         <div className="flex gap-6 text-2xl">
@@ -298,6 +289,7 @@ export default function LandingPage() {
           <a href={emailLink}><FaEnvelope /></a>
         </div>
       </footer>
+
     </div>
   );
 }
