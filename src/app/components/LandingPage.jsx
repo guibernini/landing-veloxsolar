@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Home, Building, Factory, Building2, Tractor } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaEnvelope } from "react-icons/fa";
@@ -35,6 +36,8 @@ function AnimatedNumber({ value, suffix, duration, start }) {
 }
 
 export default function LandingPage() {
+  const router = useRouter();
+
   const stats = [
     { label: "Redução na Conta de Luz", value: 95, suffix: "%", duration: 2000, icon: "💡" },
     { label: "Anos de Garantia", value: 25, suffix: "+", duration: 2500, icon: "🛠️" },
@@ -65,42 +68,38 @@ export default function LandingPage() {
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
 
-  const triggerConversion = () => {
-    if (typeof gtag !== "undefined") {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-17791443438/q-NqCPPHz9UbEO7Dz6NC'
-      });
-    }
-  };
-
-  const handleClick = () => {
-    triggerConversion();
-    window.open(whatsappLink, "_blank");
+  // Botão que abre Obrigado antes de abrir WhatsApp
+  const handleClickWhatsApp = () => {
+    router.push("/obrigado");
     setTimeout(() => {
-      window.location.href = "/obrigado";
-    }, 500); // 0,5 segundos
+      window.open(whatsappLink, "_blank");
+    }, 500); // meio segundo de delay antes de abrir o WhatsApp
   };
 
   return (
     <div className="min-h-screen text-white font-poppins relative">
 
-      {/* Botão fixo */}
-      <button
-        onClick={handleClick}
+      {/* Botão fixo do WhatsApp */}
+      <button 
+        onClick={handleClickWhatsApp}
         className="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-50 flex items-center gap-2"
       >
         <FaWhatsapp /> Fale com um Profissional
       </button>
 
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section className="relative min-h-[80vh] flex items-center justify-center text-center">
         <Image src="/hero-solar.webp" alt="Energia Solar" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 max-w-4xl px-6 text-white">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">Energia Solar que Transforma o Seu Mundo</h1>
-          <p className="text-xl text-gray-200 mb-10">Economia, sustentabilidade e retorno garantido.</p>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            Energia Solar que Transforma o Seu Mundo
+          </h1>
+          <p className="text-xl text-gray-200 mb-10">
+            Economia, sustentabilidade e retorno garantido.
+          </p>
           <button
-            onClick={handleClick}
+            onClick={handleClickWhatsApp}
             className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
           >
             Fale com a Velox Solar
@@ -108,11 +107,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ENERGIA SOLAR PARA CADA NECESSIDADE */}
+      {/* ================= ENERGIA SOLAR PARA CADA NECESSIDADE ================= */}
       <section className="py-20 bg-[#0B0D17] text-white text-center">
         <h2 className="text-4xl font-bold mb-12">Energia Solar para Cada Necessidade</h2>
         <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto px-6">
-          {[
+          {[ 
             { icon: Home, title: "Residencial", desc: "Reduza sua conta de luz em até 95% com sistemas fotovoltaicos dimensionados para seu lar." },
             { icon: Building, title: "Comercial", desc: "Aumente a competitividade do seu negócio com energia limpa e previsível." },
             { icon: Factory, title: "Industrial", desc: "Otimize custos operacionais com usinas solares de grande porte." },
@@ -121,7 +120,9 @@ export default function LandingPage() {
           ].map((item, i) => {
             const Icon = item.icon;
             return (
-              <motion.div key={i} className="bg-[#141826] p-6 rounded-2xl shadow-lg cursor-pointer"
+              <motion.div
+                key={i}
+                className="bg-[#141826] p-6 rounded-2xl shadow-lg cursor-pointer"
                 initial={{opacity:0, y:50}}
                 whileInView={{opacity:1, y:0}}
                 viewport={{ once: true }}
@@ -137,8 +138,8 @@ export default function LandingPage() {
           })}
         </div>
         <div className="mt-12">
-          <button
-            onClick={handleClick}
+          <button 
+            onClick={handleClickWhatsApp}
             className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
           >
             Fale com a Velox Solar
@@ -146,7 +147,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* QUEM SOMOS */}
+      {/* ================= QUEM SOMOS ================= */}
       <section className="py-20 bg-[#0D1B2A] text-white text-center">
         <h2 className="text-5xl font-bold mb-12">Quem Somos</h2>
         <div className="flex flex-col items-center gap-10 max-w-4xl mx-auto px-6">
@@ -156,15 +157,21 @@ export default function LandingPage() {
               animate={{ scale: [1, 1.02, 1] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Image src="/cards-solar.webp" alt="Projetos solares" fill className="object-cover rounded-2xl"/>
+              <Image
+                src="/cards-solar.webp"
+                alt="Projetos solares"
+                fill
+                className="object-cover rounded-2xl"
+              />
             </motion.div>
+
             <div className="text-lg md:text-xl leading-relaxed space-y-4 max-w-md text-left">
               <p><strong>Mais de 10.000 projetos instalados</strong> em todo o país, oferecendo soluções de alta qualidade e eficiência.</p>
               <p><strong>Referência no mercado</strong> de energia solar, com reconhecimento por clientes e parceiros.</p>
               <p><strong>Confiança garantida</strong>, cada projeto é executado com cuidado, segurança e compromisso com resultados.</p>
               <div className="mt-6">
                 <button
-                  onClick={handleClick}
+                  onClick={handleClickWhatsApp}
                   className="bg-yellow-500 text-black font-bold px-10 py-4 rounded-full text-xl hover:bg-yellow-400 transition"
                 >
                   Fale com a Velox Solar
@@ -175,7 +182,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* NÚMEROS ANIMADOS */}
+      {/* ================= NÚMEROS ANIMADOS ================= */}
       <section ref={statsRef} className="py-20 bg-[#0B0D17] text-white text-center">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
           {stats.map((stat, i) => (
@@ -195,7 +202,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FORMULÁRIO + POR QUE ESCOLHER */}
+      {/* ================= FORMULÁRIO + POR QUE ESCOLHER ================= */}
       <section className="py-20 bg-[#0E111C] text-white">
         <div className="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-12">
 
@@ -204,7 +211,7 @@ export default function LandingPage() {
             initial={{opacity:0, x:-50}} animate={{opacity:1, x:0}} transition={{duration:0.6}}
           >
             <h2 className="text-3xl font-bold mb-6">Entre em contato</h2>
-            <form className="flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); handleClick(); }}>
+            <form className="flex flex-col gap-6" action={`mailto:saopaulo.pompeia@veloxsolarenergia.com.br`} method="post">
               <input type="text" placeholder="Nome" value={form.nome} onChange={e=>setForm({...form,nome:e.target.value})} className="p-4 rounded-lg bg-[#0E111C] border border-gray-700" />
               <input type="email" placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="p-4 rounded-lg bg-[#0E111C] border border-gray-700" />
               <input type="tel" placeholder="Telefone" value={form.telefone} onChange={e=>setForm({...form,telefone:e.target.value})} className="p-4 rounded-lg bg-[#0E111C] border border-gray-700" />
@@ -216,12 +223,12 @@ export default function LandingPage() {
             </form>
           </motion.div>
 
-          {/* Por que escolher */}
+          {/* Por que escolher nossa empresa */}
           <motion.div className="flex-1 grid gap-6"
             initial={{opacity:0, x:50}} animate={{opacity:1, x:0}} transition={{duration:0.6}}
           >
             <h2 className="text-3xl font-bold mb-6">Por que escolher nossa empresa?</h2>
-            {[
+            {[ 
               { title: "Consultoria Especializada", desc: "Análise detalhada do seu consumo e desenvolvimento de projeto personalizado para máxima eficiência." },
               { title: "Tecnologia de Ponta", desc: "Equipamentos de alta qualidade com garantia estendida e máxima durabilidade." },
               { title: "Instalação Profissional", desc: "Equipe técnica certificada e experiente para implementação segura e eficiente." },
@@ -237,12 +244,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ================= FAQ ================= */}
       <section className="py-20 bg-[#0E111C] text-white text-center">
         <h2 className="text-4xl font-bold mb-10">Perguntas Frequentes</h2>
         <div className="max-w-4xl mx-auto text-left space-y-4">
           {faqs.map((faq, i) => (
-            <motion.div key={i} className="bg-[#141826] rounded-2xl p-4 cursor-pointer"
+            <motion.div
+              key={i}
+              className="bg-[#141826] rounded-2xl p-4 cursor-pointer"
               onClick={() => toggleIndex(i)}
               initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:i*0.1}}
             >
@@ -263,8 +272,8 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="mt-10 text-center">
-          <button
-            onClick={handleClick}
+          <button 
+            onClick={handleClickWhatsApp}
             className="inline-block bg-yellow-500 text-black font-bold py-4 px-10 rounded-full text-xl hover:bg-yellow-400 transition animate-pulse"
           >
             Fale com a Velox Solar
@@ -272,7 +281,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ================= FOOTER ================= */}
       <footer className="py-8 text-center text-gray-400 flex flex-col items-center gap-3 bg-[#0B0D17]">
         <p>© 2025 Velox Solar. Todos os direitos reservados.</p>
         <div className="flex gap-6 text-2xl">
@@ -281,7 +290,6 @@ export default function LandingPage() {
           <a href={emailLink}><FaEnvelope /></a>
         </div>
       </footer>
-
     </div>
   );
 }
