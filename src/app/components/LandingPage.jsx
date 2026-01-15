@@ -74,7 +74,7 @@ export default function LandingPage() {
     { label: "Energia Disponível", value: 24, suffix: "/7", duration: 1500, icon: "⚡" },
   ];
 
-  // FAQ COMPLETO (10 PERGUNTAS)
+  // FAQ COMPLETO
   const faqs = [
     { question: "1. Quais os benefícios da Cooperativa de Energia?", answer: "A Cooperativa oferece redução significativa na conta de energia, acesso a energia limpa e renovável, e participação nos créditos gerados pela usina." },
     { question: "2. Preciso fazer algum investimento?", answer: "O cooperado precisa apenas assinar o contrato e, dependendo do modelo, contribuir com uma taxa simbólica para manutenção da usina." },
@@ -88,7 +88,8 @@ export default function LandingPage() {
     { question: "10. Meu desconto é o mesmo todos os meses?", answer: "O desconto é calculado mensalmente de acordo com a produção da usina e consumo do cooperado, podendo variar ligeiramente." },
   ];
 
-  const whatsappLink = "https://wa.me/5511940306171";
+  const whatsappNumber = "5511940306171"; // Seu número
+  const whatsappLink = `https://wa.me/${whatsappNumber}`;
   const instagramLink = "https://www.instagram.com/veloxsolar.pompeiahome/";
   const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
 
@@ -97,7 +98,7 @@ export default function LandingPage() {
   const [openIndex, setOpenIndex] = useState(null);
   const toggleIndex = (index) => setOpenIndex(openIndex === index ? null : index);
 
-  // --- BOTÃO DE WHATSAPP (COM PIXEL) ---
+  // --- BOTÃO DE WHATSAPP GERAL ---
   const handleClickWhatsApp = (origin = "WhatsApp Global") => {
     trackPixel('Contact', { content_name: origin }); 
     router.push("/obrigado");
@@ -148,29 +149,35 @@ export default function LandingPage() {
     setStep(3);
   };
 
-  const handleFinalEmail = (e) => {
+  // --- ENVIO FINAL EXCLUSIVAMENTE VIA WHATSAPP ---
+  const handleFinalWhatsApp = (e) => {
     e.preventDefault();
-    trackPixel('Contact', { content_name: 'Email Proposta Oficial' });
+    trackPixel('Contact', { content_name: 'WhatsApp Proposta Oficial' });
 
     const fMoney = (val) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-    const subject = encodeURIComponent(`Nova Oportunidade Velox: ${formData.nome}`);
-    const body = encodeURIComponent(
-      `LEAD CAPTURADO:\n` +
-      `Nome: ${formData.nome}\n` +
-      `Email: ${formData.email}\n` +
-      `Telefone: ${formData.telefone}\n` +
-      `Local: ${formData.cidade} - ${formData.estado}\n\n` +
-      `PERFIL:\n` +
-      `Conta Atual: R$ ${formData.valorConta}\n` +
-      `Imóvel: ${formData.tipoImovel}\n\n` +
-      `SIMULAÇÃO APRESENTADA:\n` +
-      `Economia Anual: ${fMoney(simulation.economiaAnual)}\n` +
-      `Placas: ${simulation.qtdPlacas}\n` +
-      `Área: ${simulation.areaNecessaria} m²`
-    );
+    // Monta a mensagem formatada
+    const text = `*Olá! Fiz uma simulação no site e gostaria da proposta oficial.*
 
-    window.location.href = `mailto:saopaulo.pompeia@veloxsolarenergia.com.br?subject=${subject}&body=${body}`;
+👤 *DADOS DO CLIENTE:*
+Nome: ${formData.nome}
+Email: ${formData.email}
+Cidade: ${formData.cidade} - ${formData.estado}
+
+⚡ *MINHA CONTA:*
+Valor Atual: R$ ${formData.valorConta}
+Tipo: ${formData.tipoImovel}
+
+📊 *RESULTADO DA SIMULAÇÃO:*
+Economia Anual Estimada: ${fMoney(simulation.economiaAnual)}
+Placas Estimadas: ${simulation.qtdPlacas}
+Área Necessária: ${simulation.areaNecessaria} m²
+
+Aguardo o retorno!`;
+
+    // Abre o WhatsApp
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   };
 
   const handleCurrencyInput = (e) => {
@@ -355,8 +362,9 @@ export default function LandingPage() {
                        </div>
                     </div>
                   </div>
+                  {/* BOTÃO FINAL WHATSAPP */}
                   <div className="flex justify-center">
-                    <button onClick={handleFinalEmail} className="bg-[#00FF88] text-black font-bold py-5 px-12 rounded-full text-xl hover:scale-105 transition shadow-[0_0_20px_rgba(0,255,136,0.4)] flex items-center gap-3">
+                    <button onClick={handleFinalWhatsApp} className="bg-[#00FF88] text-black font-bold py-5 px-12 rounded-full text-xl hover:scale-105 transition shadow-[0_0_20px_rgba(0,255,136,0.4)] flex items-center gap-3">
                       <FaWhatsapp className="text-2xl"/> Receber Proposta Oficial
                     </button>
                   </div>
@@ -367,11 +375,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= SEÇÃO: POR QUE ESCOLHER (AJUSTADA E ESTICADA) ================= */}
+      {/* ================= SEÇÃO: POR QUE ESCOLHER (ESTICADA) ================= */}
       <section className="py-20 bg-[#0B0D17] text-white">
         <div className="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row items-stretch gap-12">
           
-          {/* LADO ESQUERDO - IMAGEM ESTICADA */}
           <motion.div
             className="flex-1 relative w-full min-h-[400px] lg:min-h-full rounded-2xl overflow-hidden shadow-2xl border border-gray-800"
             initial={{ opacity: 0, x: -50 }}
@@ -380,14 +387,13 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
           >
             <Image 
-              src="/solar-texto.jpeg" 
+              src="/solar-texto.png" 
               alt="Instalação Solar Profissional" 
               fill 
               className="object-cover" 
             />
           </motion.div>
 
-          {/* LADO DIREITO - LISTA DE BENEFÍCIOS */}
           <motion.div
             className="flex-1 flex flex-col justify-center gap-6"
             initial={{ opacity: 0, x: 50 }}
