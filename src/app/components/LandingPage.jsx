@@ -42,28 +42,22 @@ export default function LandingPage() {
   const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
   const webhookUrl = "https://hook.us2.make.com/6xwyjwejrjvweam1akefa9u35sv72j5g"; 
   
-  // ✅ ID DO GOOGLE ADS (Recuperado do seu e-mail)
+  // ✅ ID DO GOOGLE ADS
   const googleAdsId = "AW-17791443438"; 
-  // ✅ RÓTULO ESPECÍFICO DE CONVERSÃO (Lead -> Wpp)
+  // ✅ RÓTULO DE CONVERSÃO
   const conversionLabel = "AW-17791443438/q-NqCPPHz9UbEO7Dz6NC";
 
-  // --- FUNÇÃO DE RASTREAMENTO DUPLO (FACEBOOK + GOOGLE) ---
+  // --- FUNÇÃO DE RASTREAMENTO DUPLO ---
   const trackConversion = (eventName, params = {}) => {
     if (typeof window !== "undefined") {
-      
-      // 1. Dispara FACEBOOK
       if (window.fbq) {
         window.fbq('track', eventName, params);
         console.log(`📡 FB Pixel: ${eventName}`);
       }
-
-      // 2. Dispara GOOGLE ADS
       if (window.gtag) {
-        // Se for um contato ou lead, usa o rótulo específico do e-mail
         const sendTo = (eventName === 'Contact' || eventName === 'Lead' || eventName === 'InitiateCheckout') 
                        ? conversionLabel 
                        : googleAdsId;
-
         window.gtag('event', 'conversion', {
             'send_to': sendTo,
             'event_callback': () => console.log(`📡 Google Ads: Enviado para ${sendTo}`)
@@ -72,7 +66,7 @@ export default function LandingPage() {
     }
   };
 
-  // --- REDIRECIONAMENTO (BRIDGE PAGE) ---
+  // --- REDIRECIONAMENTO ---
   const redirectToThankYou = (finalUrl, originName) => {
     trackConversion('Contact', { content_name: originName });
     localStorage.setItem("velox_redirect", finalUrl);
@@ -92,12 +86,9 @@ export default function LandingPage() {
   // --- LÓGICA DO QUIZ ---
   const handleOptionClick = (key, value) => {
     setAnswers({ ...answers, [key]: value });
-    
-    // Rastreia progresso
     if (typeof window !== "undefined" && window.fbq) {
         window.fbq('track', 'ViewContent', { content_name: `Quiz Step ${step}: ${value}` });
     }
-    
     if (step === 1) {
         setStep(2);
     } else if (step === 2) {
@@ -117,16 +108,12 @@ export default function LandingPage() {
 
   const handleQuizSubmit = async () => {
     if (!answers.nome || !answers.telefone) return alert("Por favor, preencha seus dados para receber o resultado.");
-    
     setSendingLead(true);
-    
-    // Envia Webhook
     const leadData = {
         data_criacao: new Date().toLocaleString("pt-BR"),
         origem: "Landing Page Quiz (Projeto 1)",
         ...answers
     };
-
     try {
         await fetch(webhookUrl, {
             method: "POST",
@@ -134,14 +121,10 @@ export default function LandingPage() {
             body: JSON.stringify(leadData)
         });
     } catch (e) { console.error(e); }
-
     trackConversion('AddPaymentInfo');
-
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
     const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
-    
     redirectToThankYou(finalUrl, 'Quiz Finalizado');
-    
     setSendingLead(false);
   };
 
@@ -295,7 +278,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= FAQ 5 PERGUNTAS + FOTO ================= */}
+      {/* ================= FAQ COM BOTÃO NA ESQUERDA ================= */}
       <section className="py-24 bg-[#0B0D17]">
         <div className="container mx-auto px-6 max-w-6xl">
             <div className="text-center mb-12">
@@ -305,14 +288,23 @@ export default function LandingPage() {
             
             <div className="grid lg:grid-cols-2 gap-12 items-start">
                 
-                {/* COLUNA ESQUERDA: AS PERGUNTAS (Agora são 5) */}
-                <div className="space-y-4">
-                    {faqs.map((faq, i) => (
-                        <div key={i} className="border border-gray-800 rounded-xl bg-[#141826] overflow-hidden">
-                            <button onClick={() => toggleIndex(i)} className="w-full flex justify-between items-center p-5 text-left font-semibold hover:bg-gray-800 transition">{faq.question}<span className="text-[#00FF88] text-2xl">{openIndex === i ? "−" : "+"}</span></button>
-                            <AnimatePresence>{openIndex === i && (<motion.div initial={{height:0}} animate={{height:"auto"}} exit={{height:0}} className="overflow-hidden"><div className="p-5 pt-0 text-gray-400 text-sm leading-relaxed border-t border-gray-800">{faq.answer}</div></motion.div>)}</AnimatePresence>
-                        </div>
-                    ))}
+                {/* COLUNA ESQUERDA: PERGUNTAS + BOTÃO */}
+                <div className="flex flex-col gap-8">
+                    <div className="space-y-4">
+                        {faqs.map((faq, i) => (
+                            <div key={i} className="border border-gray-800 rounded-xl bg-[#141826] overflow-hidden">
+                                <button onClick={() => toggleIndex(i)} className="w-full flex justify-between items-center p-5 text-left font-semibold hover:bg-gray-800 transition">{faq.question}<span className="text-[#00FF88] text-2xl">{openIndex === i ? "−" : "+"}</span></button>
+                                <AnimatePresence>{openIndex === i && (<motion.div initial={{height:0}} animate={{height:"auto"}} exit={{height:0}} className="overflow-hidden"><div className="p-5 pt-0 text-gray-400 text-sm leading-relaxed border-t border-gray-800">{faq.answer}</div></motion.div>)}</AnimatePresence>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* BOTÃO AGORA AQUI DENTRO, ALINHADO À ESQUERDA/LARGURA TOTAL */}
+                    <div>
+                        <button onClick={() => handleWhatsAppClick('Botão FAQ Esquerda')} className="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl hover:bg-[#1ebc57] transition-all shadow-lg hover:shadow-green-900/40 flex justify-center items-center gap-2">
+                            <FaWhatsapp size={24} /> Tirar Dúvidas com Especialista
+                        </button>
+                    </div>
                 </div>
 
                 {/* COLUNA DIREITA: FOTO ESTILO CARD */}
@@ -320,7 +312,7 @@ export default function LandingPage() {
                     initial={{ opacity: 0, x: 50 }} 
                     whileInView={{ opacity: 1, x: 0 }} 
                     viewport={{ once: true }}
-                    className="relative h-[550px] w-full hidden lg:block rounded-3xl overflow-hidden border border-[#00FF88]/30 shadow-[0_0_50px_rgba(0,255,136,0.15)]"
+                    className="relative h-[650px] w-full hidden lg:block rounded-3xl overflow-hidden border border-[#00FF88]/30 shadow-[0_0_50px_rgba(0,255,136,0.15)]"
                 >
                     <Image 
                         src="/faq-solar.jpeg" 
@@ -335,12 +327,6 @@ export default function LandingPage() {
                         <p className="text-gray-300 text-sm mt-1">Nossa equipe cuida de tudo para você só se preocupar em economizar.</p>
                     </div>
                 </motion.div>
-            </div>
-            
-            <div className="text-center mt-12">
-                <button onClick={() => handleWhatsAppClick('Botão Final FAQ')} className="inline-flex items-center gap-2 bg-[#25D366] text-white font-bold py-3 px-8 rounded-full hover:bg-[#1ebc57] transition-all shadow-lg hover:shadow-green-900/40">
-                    <FaWhatsapp size={20} /> Tirar Dúvidas no WhatsApp
-                </button>
             </div>
         </div>
       </section>
