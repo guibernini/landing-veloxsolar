@@ -73,8 +73,13 @@ export default function LandingPage() {
     router.push("/obrigado");
   };
 
+  // ✅ AQUI MUDOU: MENSAGEM PADRÃO PARA OS BOTÕES AVULSOS
   const handleWhatsAppClick = (origin) => {
-      redirectToThankYou(whatsappBase, origin);
+      // Mensagem que vai aparecer escrita no WhatsApp da pessoa
+      const message = "Olá! Gostaria de saber mais sobre energia solar e fazer um orçamento.";
+      
+      const finalUrl = `${whatsappBase}?text=${encodeURIComponent(message)}`;
+      redirectToThankYou(finalUrl, origin);
   };
 
   // --- ESTADOS DO QUIZ ---
@@ -122,8 +127,11 @@ export default function LandingPage() {
         });
     } catch (e) { console.error(e); }
     trackConversion('AddPaymentInfo');
+    
+    // ✅ MENSAGEM ESPECÍFICA DO QUIZ (Continua igual)
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
     const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
+    
     redirectToThankYou(finalUrl, 'Quiz Finalizado');
     setSendingLead(false);
   };
