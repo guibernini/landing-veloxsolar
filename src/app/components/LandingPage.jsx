@@ -50,10 +50,18 @@ export default function LandingPage() {
     console.log(`📡 Pixel Disparado: ${eventName}`, params);
   };
 
-  // --- REDIRECIONAMENTO ---
-  const handleWhatsAppClick = (origin) => {
-    trackPixel('Contact', { content_name: origin });
-    window.open(whatsappBase, '_blank');
+  // --- REDIRECIONAMENTO INTELIGENTE (BRIDGE PAGE) ---
+  const redirectToThankYou = (finalUrl, originName) => {
+    // 1. Rastrea o clique
+    trackPixel('Contact', { content_name: originName });
+    // 2. Salva o link de destino
+    localStorage.setItem("velox_redirect", finalUrl);
+    // 3. Manda para a página de obrigado (Lá o pixel de LEAD dispara com segurança)
+    router.push("/obrigado");
+  };
+
+  const handleSimpleClick = (origin) => {
+      redirectToThankYou(whatsappBase, origin);
   };
 
   // --- ESTADOS DO QUIZ ---
@@ -89,7 +97,7 @@ export default function LandingPage() {
     
     setSendingLead(true);
     
-    // Envia Webhook
+    // Envia Webhook (Make)
     const leadData = {
         data_criacao: new Date().toLocaleString("pt-BR"),
         origem: "Landing Page Quiz (Projeto 1)",
@@ -104,11 +112,14 @@ export default function LandingPage() {
         });
     } catch (e) { console.error(e); }
 
-    trackPixel('Lead');
+    // Só marca que preencheu info de pagamento/contato aqui. O LEAD real é na página de obrigado.
+    trackPixel('AddPaymentInfo');
 
-    // Monta texto e abre WhatsApp
+    // Monta texto e redireciona via Bridge Page
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
-    window.open(`${whatsappBase}?text=${encodeURIComponent(text)}`, '_blank');
+    const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
+    
+    redirectToThankYou(finalUrl, 'Quiz Finalizado');
     
     setSendingLead(false);
   };
@@ -140,12 +151,11 @@ export default function LandingPage() {
   ];
 
   return (
-    // ADICIONEI overflow-x-hidden AQUI PARA CORRIGIR O SCROLL LATERAL
     <div className="min-h-screen bg-[#0B0D17] text-white font-sans selection:bg-[#00FF88] selection:text-black overflow-x-hidden">
 
       {/* BOTÃO FLUTUANTE (FIXO) */}
       <button 
-        onClick={() => handleWhatsAppClick('Botão Flutuante Fixo')}
+        onClick={() => handleSimpleClick('Botão Flutuante Fixo')}
         className="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#1ebc57] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.6)] hover:scale-110 transition-all duration-300 flex items-center gap-3 group border-2 border-transparent hover:border-white"
       >
         <FaWhatsapp className="text-3xl" />
@@ -157,7 +167,7 @@ export default function LandingPage() {
       {/* ================= HERO SECTION COM QUIZ ================= */}
       <section className="relative min-h-[100vh] flex items-center pt-20 pb-12 overflow-hidden">
         
-        {/* Imagem de Fundo (Mesma da outra) */}
+        {/* Imagem de Fundo */}
         <div className="absolute inset-0 z-0">
             <Image src="/hero-solar.webp" alt="Fundo Solar" fill className="object-cover opacity-50" priority />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0B0D17] via-[#0B0D17]/80 to-transparent" />
@@ -184,7 +194,7 @@ export default function LandingPage() {
 
                 {/* BOTÃO CTA HERO */}
                 <button 
-                    onClick={() => handleWhatsAppClick('Botão Hero Principal')}
+                    onClick={() => handleSimpleClick('Botão Hero Principal')}
                     className="inline-flex items-center gap-3 bg-[#00FF88] text-black font-extrabold py-4 px-8 rounded-full hover:bg-[#00e67a] transition-all shadow-[0_0_30px_rgba(0,255,136,0.4)] hover:scale-105"
                 >
                     <FaWhatsapp size={24}/> Falar com Especialista Agora
@@ -304,7 +314,7 @@ export default function LandingPage() {
                     ))}
                 </div>
                 {/* BOTÃO CTA INTERMEDIÁRIO */}
-                <button onClick={() => handleWhatsAppClick('Botão Seção Quem Somos')} className="px-8 py-3 border border-[#00FF88] text-[#00FF88] rounded-full hover:bg-[#00FF88] hover:text-black transition font-bold">
+                <button onClick={() => handleSimpleClick('Botão Seção Quem Somos')} className="px-8 py-3 border border-[#00FF88] text-[#00FF88] rounded-full hover:bg-[#00FF88] hover:text-black transition font-bold">
                     Conhecer a Empresa
                 </button>
             </motion.div>
@@ -330,7 +340,7 @@ export default function LandingPage() {
             </div>
             {/* BOTÃO CTA BENEFÍCIOS */}
             <div className="mt-12">
-                 <button onClick={() => handleWhatsAppClick('Botão Seção Benefícios')} className="inline-flex items-center gap-2 bg-[#00FF88] text-black font-bold py-3 px-8 rounded-full hover:bg-[#00e67a] transition-all shadow-lg">
+                 <button onClick={() => handleSimpleClick('Botão Seção Benefícios')} className="inline-flex items-center gap-2 bg-[#00FF88] text-black font-bold py-3 px-8 rounded-full hover:bg-[#00e67a] transition-all shadow-lg">
                      <FaWhatsapp size={20} /> Quero Esses Benefícios
                  </button>
             </div>
@@ -357,7 +367,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left"><h4 className="text-2xl font-bold text-white mb-2">VELOX SOLAR</h4><p className="text-gray-500 text-sm">Energia inteligente para um futuro sustentável.</p></div>
             <div className="flex gap-6">
-                <button onClick={() => handleWhatsAppClick('Icone Footer Zap')} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#00FF88] hover:text-black transition"><FaWhatsapp/></button>
+                <button onClick={() => handleSimpleClick('Icone Footer Zap')} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#00FF88] hover:text-black transition"><FaWhatsapp/></button>
                 <a href={instagramLink} target="_blank" onClick={() => trackPixel('Contact', { content_name: 'Instagram Footer' })} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-pink-600 transition"><FaInstagram/></a>
                 <a href={emailLink} onClick={() => trackPixel('Contact', { content_name: 'Email Footer' })} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-blue-600 transition"><FaEnvelope/></a>
             </div>
