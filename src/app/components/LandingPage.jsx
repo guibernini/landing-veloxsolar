@@ -36,7 +36,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   // --- CONFIGURAÇÕES ---
-  const whatsappNumber = "5511940306171";
+  const whatsappNumber = "5511951569352"; // ✅ ALTERADO AQUI
   const whatsappBase = `https://wa.me/${whatsappNumber}`;
   const instagramLink = "https://www.instagram.com/veloxsolar.pompeiahome/";
   const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
@@ -56,8 +56,8 @@ export default function LandingPage() {
       }
       if (window.gtag) {
         const sendTo = (eventName === 'Contact' || eventName === 'Lead' || eventName === 'InitiateCheckout') 
-                       ? conversionLabel 
-                       : googleAdsId;
+                        ? conversionLabel 
+                        : googleAdsId;
         window.gtag('event', 'conversion', {
             'send_to': sendTo,
             'event_callback': () => console.log(`📡 Google Ads: Enviado para ${sendTo}`)
@@ -377,7 +377,8 @@ export default function LandingPage() {
                         </li>
                         <li className="flex items-center gap-3">
                             <Phone size={18} className="text-[#00FF88] shrink-0"/>
-                            <span>(11) 94030-6171</span>
+                            {/* ✅ ALTERADO AQUI */}
+                            <span>(11) 95156-9352</span>
                         </li>
                         <li className="flex items-center gap-3">
                             <Clock size={18} className="text-[#00FF88] shrink-0"/>
