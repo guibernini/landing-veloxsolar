@@ -6,7 +6,7 @@ import { FaWhatsapp } from "react-icons/fa";
 
 export default function Obrigado() {
   const [count, setCount] = useState(3);
-  const defaultUrl = "https://wa.me/5511940306171"; 
+  const defaultUrl = "https://wa.me/5511951569352"; 
 
   useEffect(() => {
     // Tenta pegar o link salvo, se não tiver, usa o padrão
