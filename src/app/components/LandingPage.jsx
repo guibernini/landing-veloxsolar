@@ -230,19 +230,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= POR QUE A VELOX (CORREÇÃO TOTAL) ================= */}
+      {/* ================= POR QUE A VELOX (CORREÇÃO: HTML IMG TAG) ================= */}
       <section className="py-24 bg-[#0B0D17]">
         <div className="container mx-auto px-6 flex flex-col lg:flex-row gap-16 items-center">
-            {/* 🛑 CORREÇÃO AQUI: Sem animação e com unoptimized */}
+            
+            {/* 🛑 ALTERAÇÃO: Usando tag <img> padrão do HTML */}
             <div className="lg:w-1/2">
                 <div className="relative h-[300px] lg:h-[500px] w-full rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
-                    <Image 
+                    <img 
                         src="/solar-texto.jpeg" 
                         alt="Instalação Profissional" 
-                        fill 
-                        unoptimized={true}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover hover:scale-105 transition duration-700" 
+                        className="w-full h-full object-cover hover:scale-105 transition duration-700" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8"><p className="text-white font-medium">Equipe própria certificada em todo o Brasil.</p></div>
                 </div>
