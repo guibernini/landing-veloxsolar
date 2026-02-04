@@ -36,7 +36,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   // --- CONFIGURAÇÕES ---
-  const whatsappNumber = "5511951569352"; // ✅ ALTERADO AQUI
+  const whatsappNumber = "5511951569352"; 
   const whatsappBase = `https://wa.me/${whatsappNumber}`;
   const instagramLink = "https://www.instagram.com/veloxsolar.pompeiahome/";
   const emailLink = "mailto:saopaulo.pompeia@veloxsolarenergia.com.br";
@@ -66,18 +66,14 @@ export default function LandingPage() {
     }
   };
 
-  // --- REDIRECIONAMENTO ---
   const redirectToThankYou = (finalUrl, originName) => {
     trackConversion('Contact', { content_name: originName });
     localStorage.setItem("velox_redirect", finalUrl);
     router.push("/obrigado");
   };
 
-  // ✅ AQUI MUDOU: MENSAGEM PADRÃO PARA OS BOTÕES AVULSOS
   const handleWhatsAppClick = (origin) => {
-      // Mensagem que vai aparecer escrita no WhatsApp da pessoa
       const message = "Olá! Gostaria de saber mais sobre energia solar e fazer um orçamento.";
-      
       const finalUrl = `${whatsappBase}?text=${encodeURIComponent(message)}`;
       redirectToThankYou(finalUrl, origin);
   };
@@ -88,7 +84,6 @@ export default function LandingPage() {
   const [sendingLead, setSendingLead] = useState(false);
   const [answers, setAnswers] = useState({ faixaConta: "", objetivo: "", nome: "", telefone: "" });
 
-  // --- LÓGICA DO QUIZ ---
   const handleOptionClick = (key, value) => {
     setAnswers({ ...answers, [key]: value });
     if (typeof window !== "undefined" && window.fbq) {
@@ -128,7 +123,6 @@ export default function LandingPage() {
     } catch (e) { console.error(e); }
     trackConversion('AddPaymentInfo');
     
-    // ✅ MENSAGEM ESPECÍFICA DO QUIZ (Continua igual)
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
     const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
     
@@ -136,13 +130,11 @@ export default function LandingPage() {
     setSendingLead(false);
   };
 
-  // Referências
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState(null);
   const toggleIndex = (index) => setOpenIndex(openIndex === index ? null : index);
 
-  // --- DADOS ---
   const stats = [
     { label: "Economia Garantida", value: 95, suffix: "%", duration: 2000, icon: "📉" },
     { label: "Anos de Garantia", value: 25, suffix: "+", duration: 2500, icon: "🛡️" },
@@ -160,7 +152,6 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0B0D17] text-white font-sans selection:bg-[#00FF88] selection:text-black overflow-x-hidden">
 
-      {/* BOTÃO FLUTUANTE */}
       <button 
         onClick={() => handleWhatsAppClick('Botão Flutuante Fixo')}
         className="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#1ebc57] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.6)] hover:scale-110 transition-all duration-300 flex items-center gap-3 group border-2 border-transparent hover:border-white"
@@ -179,7 +170,6 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0B0D17]" />
         </div>
         <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
-            {/* TEXTO HERO */}
             <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00FF88]/30 bg-[#00FF88]/10 text-[#00FF88] text-sm font-bold mb-6"><Sun size={16} /> Programa Energia Limpa 2026</div>
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">Descubra se sua casa está apta para <span className="text-[#00FF88]">Energia Solar</span></h1>
@@ -192,7 +182,6 @@ export default function LandingPage() {
                     <FaWhatsapp size={24}/> Falar com Especialista Agora
                 </button>
             </motion.div>
-            {/* QUIZ */}
             <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="bg-[#141826]/90 backdrop-blur-xl border border-[#00FF88]/20 rounded-3xl p-8 shadow-2xl shadow-[#00FF88]/10">
                 <AnimatePresence mode="wait">
                     {step === 1 && (
@@ -241,22 +230,23 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= POR QUE A VELOX (CORRIGIDO AQUI) ================= */}
+      {/* ================= POR QUE A VELOX (CORREÇÃO TOTAL) ================= */}
       <section className="py-24 bg-[#0B0D17]">
         <div className="container mx-auto px-6 flex flex-col lg:flex-row gap-16 items-center">
-            {/* CORREÇÃO APLICADA NESTE BLOCO: Viewport, Height Responsivo e Sizes na Imagem */}
-            <motion.div className="lg:w-1/2" initial={{opacity:0, x:-50}} whileInView={{opacity:1, x:0}} viewport={{ once: true }}>
+            {/* 🛑 CORREÇÃO AQUI: Sem animação e com unoptimized */}
+            <div className="lg:w-1/2">
                 <div className="relative h-[300px] lg:h-[500px] w-full rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
                     <Image 
                         src="/solar-texto.jpeg" 
                         alt="Instalação Profissional" 
                         fill 
+                        unoptimized={true}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover hover:scale-105 transition duration-700" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8"><p className="text-white font-medium">Equipe própria certificada em todo o Brasil.</p></div>
                 </div>
-            </motion.div>
+            </div>
             
             <motion.div className="lg:w-1/2 space-y-8" initial={{opacity:0, x:50}} whileInView={{opacity:1, x:0}} viewport={{ once: true }}>
                 <div><h2 className="text-4xl font-bold mb-4">Engenharia de Ponta</h2><p className="text-gray-400 text-lg">Não vendemos apenas placas. Entregamos uma solução completa de engenharia energética para zerar sua conta com segurança.</p></div>
@@ -315,7 +305,6 @@ export default function LandingPage() {
                         ))}
                     </div>
                     
-                    {/* BOTÃO AGORA AQUI DENTRO, ALINHADO À ESQUERDA/LARGURA TOTAL */}
                     <div>
                         <button onClick={() => handleWhatsAppClick('Botão FAQ Esquerda')} className="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl hover:bg-[#1ebc57] transition-all shadow-lg hover:shadow-green-900/40 flex justify-center items-center gap-2">
                             <FaWhatsapp size={24} /> Tirar Dúvidas com Especialista
@@ -351,8 +340,6 @@ export default function LandingPage() {
       <footer className="bg-[#080a12] pt-16 pb-8 border-t border-gray-800">
         <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-                
-                {/* COLUNA 1: MARCA */}
                 <div className="space-y-4">
                     <h4 className="text-2xl font-bold text-white tracking-tighter">VELOX<span className="text-[#00FF88]">SOLAR</span></h4>
                     <p className="text-gray-400 text-sm leading-relaxed">
@@ -364,7 +351,6 @@ export default function LandingPage() {
                     </div>
                 </div>
 
-                {/* COLUNA 2: NAVEGAÇÃO */}
                 <div>
                     <h5 className="text-white font-bold mb-6">Navegação</h5>
                     <ul className="space-y-3 text-sm text-gray-400">
@@ -375,7 +361,6 @@ export default function LandingPage() {
                     </ul>
                 </div>
 
-                {/* COLUNA 3: CONTATO */}
                 <div>
                     <h5 className="text-white font-bold mb-6">Fale Conosco</h5>
                     <ul className="space-y-4 text-sm text-gray-400">
@@ -385,7 +370,6 @@ export default function LandingPage() {
                         </li>
                         <li className="flex items-center gap-3">
                             <Phone size={18} className="text-[#00FF88] shrink-0"/>
-                            {/* ✅ ALTERADO AQUI */}
                             <span>(11) 95156-9352</span>
                         </li>
                         <li className="flex items-center gap-3">
@@ -395,7 +379,6 @@ export default function LandingPage() {
                     </ul>
                 </div>
 
-                {/* COLUNA 4: LEGAL */}
                 <div>
                     <h5 className="text-white font-bold mb-6">Transparência</h5>
                     <ul className="space-y-3 text-sm text-gray-400">
