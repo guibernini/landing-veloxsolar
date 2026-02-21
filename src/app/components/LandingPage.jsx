@@ -123,7 +123,7 @@ export default function LandingPage() {
             body: JSON.stringify(leadData)
         });
     } catch (e) { console.error(e); }
-    trackConversion('AddPaymentInfo');
+    trackConversion('Lead');
     
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
     const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
