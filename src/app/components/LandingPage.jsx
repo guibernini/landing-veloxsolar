@@ -49,7 +49,7 @@ export default function LandingPage() {
   // ✅ RÓTULO DE CONVERSÃO
   const conversionLabel = "AW-17791443438/q-NqCPPHz9UbEO7Dz6NC";
 
-  // --- FUNÇÃO DE RASTREAMENTO DUPLO ---
+  // --- FUNÇÃO DE RASTREAMENTO CORRIGIDA ---
   const trackConversion = (eventName, params = {}) => {
     if (typeof window !== "undefined") {
       if (window.fbq) {
@@ -57,10 +57,13 @@ export default function LandingPage() {
         console.log(`📡 FB Pixel: ${eventName}`);
       }
       if (window.gtag) {
-        const sendTo = (eventName === 'Contact' || eventName === 'Lead' || eventName === 'InitiateCheckout') 
+        const sendTo = (eventName === 'Contact' || eventName === 'Lead') 
                         ? conversionLabel 
                         : googleAdsId;
-        window.gtag('event', 'conversion', {
+                        
+        const googleEventName = eventName === 'InitiateCheckout' ? 'begin_checkout' : 'conversion';
+
+        window.gtag('event', googleEventName, {
             'send_to': sendTo,
             'event_callback': () => console.log(`📡 Google Ads: Enviado para ${sendTo}`)
         });
@@ -68,8 +71,10 @@ export default function LandingPage() {
     }
   };
 
-  const redirectToThankYou = (finalUrl, originName) => {
-    trackConversion('Contact', { content_name: originName });
+  const redirectToThankYou = (finalUrl, originName, skipTracking = false) => {
+    if (!skipTracking) {
+      trackConversion('Contact', { content_name: originName });
+    }
     localStorage.setItem("velox_redirect", finalUrl);
     router.push("/obrigado");
   };
@@ -123,12 +128,13 @@ export default function LandingPage() {
             body: JSON.stringify(leadData)
         });
     } catch (e) { console.error(e); }
-    trackConversion('Lead');
+    
+    trackConversion('Lead', { content_name: 'Quiz Finalizado' });
     
     const text = `*Olá! Fiz o Quiz Solar e fui aprovado.* ✅\n\n💰 Faixa de Conta: ${answers.faixaConta}\n🎯 Objetivo: ${answers.objetivo}\n\n👤 *MEUS DADOS:*\nNome: ${answers.nome}\n\nGostaria de ver o estudo completo!`;
     const finalUrl = `${whatsappBase}?text=${encodeURIComponent(text)}`;
     
-    redirectToThankYou(finalUrl, 'Quiz Finalizado');
+    redirectToThankYou(finalUrl, 'Quiz Finalizado', true);
     setSendingLead(false);
   };
 
@@ -232,11 +238,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= POR QUE A VELOX (CORREÇÃO: HTML IMG TAG) ================= */}
+      {/* ================= POR QUE A VELOX ================= */}
       <section className="py-24 bg-[#0B0D17]">
         <div className="container mx-auto px-6 flex flex-col lg:flex-row gap-16 items-center">
-            
-            {/* 🛑 ALTERAÇÃO: Usando tag <img> padrão do HTML */}
             <div className="lg:w-1/2">
                 <div className="relative h-[300px] lg:h-[500px] w-full rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
                     <img 
@@ -354,10 +358,10 @@ export default function LandingPage() {
                 <div>
                     <h5 className="text-white font-bold mb-6">Navegação</h5>
                     <ul className="space-y-3 text-sm text-gray-400">
-                        <li><button onClick={() => window.scrollTo(0,0)} className="hover:text-[#00FF88] transition">Início</button></li>
-                        <li><button onClick={() => handleWhatsAppClick('Footer Link - Projetos')} className="hover:text-[#00FF88] transition">Projetos</button></li>
-                        <li><button onClick={() => handleWhatsAppClick('Footer Link - Sobre')} className="hover:text-[#00FF88] transition">Quem Somos</button></li>
-                        <li><button onClick={() => handleWhatsAppClick('Footer Link - Blog')} className="hover:text-[#00FF88] transition">Blog Solar</button></li>
+                        <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-[#00FF88] transition">Início</button></li>
+                        <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-[#00FF88] transition">Projetos</button></li>
+                        <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-[#00FF88] transition">Quem Somos</button></li>
+                        <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-[#00FF88] transition">Blog Solar</button></li>
                     </ul>
                 </div>
 
